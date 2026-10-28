@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <link rel="icon" href="icon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -23,7 +23,8 @@ html{scroll-padding-top:env(safe-area-inset-top,0px);background:var(--bg1)}
 [hidden]{display:none!important}
 body{margin:0;color:var(--tx);font:600 15px/1.35 Nunito,ui-rounded,'Hiragino Maru Gothic ProN',system-ui,sans-serif;min-height:100vh;background:radial-gradient(circle at 1.5px 1.5px,var(--dot) 2px,transparent 2.6px) 0 0/28px 28px,linear-gradient(170deg,var(--bg1),var(--bg2) 55%,var(--bg3)) fixed;background-color:var(--bg1)}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--hd);z-index:10}
-button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+html,body,button,input{touch-action:manipulation}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--hd);padding:12px 14px 14px;border-radius:0 0 28px 28px;box-shadow:0 8px 24px var(--sh)}
 .top{display:flex;align-items:center;gap:8px}
 .logo{width:44px;height:44px;border-radius:15px;background:linear-gradient(135deg,var(--ac),var(--ac2));display:grid;place-items:center;flex:none;box-shadow:0 4px 12px var(--sh)}
@@ -65,6 +66,13 @@ main{padding:14px 12px 100px}
 .mb u{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--ac),var(--ac2));text-decoration:none}
 .g{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .p.w .g{grid-template-columns:repeat(auto-fill,minmax(54px,1fr))}
+.p.c3 .g{grid-template-columns:repeat(3,1fr);gap:10px;max-width:440px;margin:0 auto}
+.p.c3 .n{font-size:clamp(24px,8vw,32px);-webkit-text-stroke:4.5px #7a2f6f}
+.p.c3 .t{border-radius:16px}
+.p.c3 .t::after{width:26px;height:26px;font-size:14px;left:5px;bottom:5px}
+.p.c3 .ok{width:24px;height:24px;font-size:13px;left:5px;top:5px}
+.p.c3 .x{right:5px;top:5px;font-size:12px;padding:4px 8px}
+.row .rst{color:var(--ac)}
 .t{position:relative;aspect-ratio:3/4;padding:0;border:2px solid #fff;border-radius:12px;overflow:hidden;display:grid;place-items:center;background:var(--tb);box-shadow:0 4px 10px var(--sh);transition:transform .15s,box-shadow .15s}
 .t:active{transform:scale(.94)}
 .t.m{box-shadow:0 1px 3px var(--sh);filter:grayscale(.5)}
@@ -382,7 +390,7 @@ function render(){
       const badge=k>1?`<i class="x">+${k-1}</i>`:k?`<i class="ok">✓</i>`:"";
       t+=`<button class="t k-${rar(n)} i${n}${k?"":" m"}" data-n="${n}" aria-label="Cartinha ${n}${k?", tenho":", falta"}"><span class="n">${n}</span>${badge}</button>`;
     }
-    if(t){const tot=b-a+1,dn=have===tot;h+=`<section class="p${b-a>10?" w":""}${dn?" done":""}"><h2><span>${name}</span><em>${dn?"★ ":""}${have}/${tot}</em></h2><div class="mb"><u style="width:${have/tot*100}%"></u></div><div class="g">${t}</div></section>`}
+    if(t){const tot=b-a+1,dn=have===tot;h+=`<section class="p w${tot<=9?" c3":""}${dn?" done":""}"><h2><span>${name}</span><em>${dn?"★ ":""}${have}/${tot}</em></h2><div class="mb"><u style="width:${have/tot*100}%"></u></div><div class="g">${t}</div></section>`}
   }
   $("#app").innerHTML=h||'<p class="emp">Nenhuma cartinha por aqui.</p>';
   window.scrollTo(0,y);
@@ -391,7 +399,7 @@ function lockUI(){$("#bl").classList.toggle("on",S.lock);$("#bl").setAttribute("
 
 function drawCard(){
   const k=cp(cur),c=COLL.find(x=>cur>=x[1]&&cur<=x[2])[0];
-  $("#sc").innerHTML=`<div class="hd"><div class="pv i${cur}"></div><div><h3>Nº ${cur}</h3><p class="mut">${c} · ${RK[rar(cur)]}</p></div></div><div class="cnt"><button data-a="dec" aria-label="Menos uma">−</button><div><b>${k}</b><small>${k===1?"cópia":"cópias"}</small></div><button data-a="inc" aria-label="Mais uma">+</button></div><p class="mut" style="text-align:center">${k>1?(k-1)+(k>2?" repetidas":" repetida"):"Sem repetidas"}</p><div class="row"><button data-a="clr">Não tenho</button><button class="pri" data-a="cls">Pronto</button></div>`;
+  $("#sc").innerHTML=`<div class="hd"><div class="pv i${cur}"></div><div><h3>Nº ${cur}</h3><p class="mut">${c} · ${RK[rar(cur)]}</p></div></div><div class="cnt"><button data-a="dec" aria-label="Menos uma">−</button><div><b>${k}</b><small>${k===1?"cópia":"cópias"}</small></div><button data-a="inc" aria-label="Mais uma">+</button></div><p class="mut" style="text-align:center">${k>1?(k-1)+(k>2?" repetidas":" repetida"):"Sem repetidas"}</p>${k>1?'<div class="row"><button class="rst" data-a="rst">Excluir repetidas</button></div>':""}<div class="row"><button data-a="clr">Não tenho</button><button class="pri" data-a="cls">Pronto</button></div>`;
 }
 const closeSh=()=>{$("#sh").hidden=true};
 
@@ -408,6 +416,7 @@ $("#sc").addEventListener("click",e=>{
   if(act==="inc")setC(cur,k+1);
   if(act==="dec")setC(cur,k-1);
   if(act==="clr")setC(cur,0);
+  if(act==="rst")setC(cur,1);
   save();render();
   if(!cp(cur))closeSh();else drawCard();
 });
